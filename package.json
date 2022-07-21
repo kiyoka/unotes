@@ -777,9 +777,24 @@
         }
     },
     "dependencies": {
+
+        "@toast-ui/editor": "^2.5.1",
+        "@toast-ui/editor-plugin-chart": "^1.0.0",
+        "@toast-ui/editor-plugin-code-syntax-highlight": "^1.0.0",
+        "@toast-ui/editor-plugin-uml": "^1.0.0",
         "debounce": "^1.2.0",
+        "katex": "^0.12.0",
+        "react": "^16.14.0",
+        "react-dom": "^16.14.0",
+        "react-scripts": "^2.1.8",
+        "remark": "^13.0.0",
+        "remark-frontmatter": "^3.0.0",
+        "remark-gfm": "^1.0.0",
+        "codemirror": "^5.48.4",
         "handlebars": "^4.7.7",
-        "moment": "^2.29.1"
+        "highlight.js": "10.0.0",
+        "moment": "^2.29.1",
+        "rewire": "^4.0.1"
     },
     "devDependencies": {
         "@types/node": "^10.14.22",
