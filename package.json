@@ -17,7 +17,7 @@
         "url": "https://github.com/ryanmcalister/unotes.git"
     },
     "engines": {
-        "vscode": "^1.52.0"
+        "vscode": "^1.69.0"
     },
     "capabilities": {
         "virtualWorkspaces": true,
