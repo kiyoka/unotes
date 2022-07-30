@@ -26,6 +26,9 @@ import './override-katex.css'
 // root for local images
 var img_root = '';
 
+// image zoom Limit pacent
+var img_zoom_limit_pacent = 100;
+
 function escapeRegExp(str) {
     return str.replace(/([.*+?^=!:${}()|[]\/\\])/g, "\\$1");
 }
@@ -133,6 +136,16 @@ class TuiEditor extends Component {
                         } else {
                             result.attributes.src = img_root + node.destination;
                         }
+                        switch (img_zoom_limit_pacent) {
+                            case 10:
+                            case 25:
+                            case 50:
+                            case 75:
+                                result.attributes.class = "zoom" + img_zoom_limit_pacent;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     return result;
                 }
@@ -236,6 +249,7 @@ class TuiEditor extends Component {
 
     setContent(data){
         img_root = data.folderPath + '/';
+        img_zoom_limit_pacent = this.state.settings.imageZoomLimitPercent;
         this.state.editor.setMarkdown(data.content, false);
         this.contentSet = true;
         

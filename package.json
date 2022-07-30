@@ -78,6 +78,11 @@
                     "type": "string",
                     "default": "title_date",
                     "markdownDescription": "The template used for new notes"
+                },
+                "unotes.editor.imageZoomLimitPercent": {
+                    "type": "integer",
+                    "default": "100",
+                    "markdownDescription": "image zoom limit size in percent. (e.g. 10 or 25 or 50 or 75 or 100)"
                 }
             }
         },
