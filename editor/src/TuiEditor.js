@@ -137,7 +137,6 @@ class TuiEditor extends Component {
                         } else {
                             result.attributes.src = img_root + node.destination;
                         }
-                            case 10:
                     }
                     // console.log("Config__img_zoom_out_limit_percent" + Config__img_zoom_out_limit_percent);
                     // console.log("Temp__img_zoom_out_limit_percent" + Temp__img_zoom_out_limit_percent);
