@@ -78,6 +78,17 @@ class UNotes {
 
         context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(Config.onChange.bind(Config)));
 
+        // status Bar
+        const statusBarCommandId = 'unotes.showImageZoomPercent';
+        this.lastImageZoomPercent = Config.imageZoomOutLimitPercent;
+        this.disposables.push(
+            vscode.commands.registerCommand(statusBarCommandId, this.onShowStatusBar.bind(this))
+        );
+        this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+        this.statusBarItem.command = statusBarCommandId;
+        context.subscriptions.push(this.statusBarItem);
+        this.onShowStatusBar();
+
         // Create view and Provider
         const uNoteProvider = new UNoteProvider(Config.rootPath);
         this.uNoteProvider = uNoteProvider;
@@ -434,10 +445,18 @@ class UNotes {
     }
 
     async onImageZoomOut(percent) {
+        this.lastImageZoomPercent = percent;
         const panel = UNotesPanel.instance();
         if (panel) {
             await panel.imageZoomOut(percent);
         }
+        await this.onShowStatusBar();
+    }
+
+    async onShowStatusBar()
+    {
+        this.statusBarItem.text = `Unotes image zoom: ${this.lastImageZoomPercent}%`;
+        this.statusBarItem.show();
     }
 
     async onRenameFolder(folder) {
