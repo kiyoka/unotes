@@ -676,27 +676,27 @@
                 {
                     "command": "unotes.imageZoomOut_10",
                     "when": "viewItem =~ /(uNoteFile)/",
-                    "group": "unotesProcess@2"
+                    "group": "unotesImageZoomOut@1"
                 },
                 {
                     "command": "unotes.imageZoomOut_25",
                     "when": "viewItem =~ /(uNoteFile)/",
-                    "group": "unotesProcess@3"
+                    "group": "unotesImageZoomOut@2"
                 },
                 {
                     "command": "unotes.imageZoomOut_50",
                     "when": "viewItem =~ /(uNoteFile)/",
-                    "group": "unotesProcess@4"
+                    "group": "unotesImageZoomOut@3"
                 },
                 {
                     "command": "unotes.imageZoomOut_75",
                     "when": "viewItem =~ /(uNoteFile)/",
-                    "group": "unotesProcess@5"
+                    "group": "unotesImageZoomOut@4"
                 },
                 {
                     "command": "unotes.imageZoomOut_100",
                     "when": "viewItem =~ /(uNoteFile)/",
-                    "group": "unotesProcess@6"
+                    "group": "unotesImageZoomOut@5"
                 },
                 {
                     "command": "unotes.renameFolder",
