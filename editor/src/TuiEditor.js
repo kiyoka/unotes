@@ -127,17 +127,6 @@ class TuiEditor extends Component {
                 image(node, context) {
                     const { origin, entering } = context;
                     const result = origin();
-                    const httpRE = /^https?:\/\/|^data:/;
-                    if (httpRE.test(node.destination)){
-                        return result;
-                    }
-                    if (entering) {
-                        if (node.destination.startsWith('/')) {
-                            result.attributes.src = node.destination;
-                        } else {
-                            result.attributes.src = img_root + node.destination;
-                        }
-                    }
                     // console.log("Config__img_zoom_out_limit_percent" + Config__img_zoom_out_limit_percent);
                     // console.log("Temp__img_zoom_out_limit_percent" + Temp__img_zoom_out_limit_percent);
                     let percent = Config__img_zoom_out_limit_percent;
@@ -154,6 +143,17 @@ class TuiEditor extends Component {
                         default:
                             result.attributes.class = "zoom100";
                             break;
+                    }
+                    const httpRE = /^https?:\/\/|^data:/;
+                    if (httpRE.test(node.destination)){
+                        return result;
+                    }
+                    if (entering) {
+                        if (node.destination.startsWith('/')) {
+                            result.attributes.src = node.destination;
+                        } else {
+                            result.attributes.src = img_root + node.destination;
+                        }
                     }
                     return result;
                 }
