@@ -41,3 +41,7 @@ img.zoom50 {
 img.zoom75 {
   max-width: 75% !important;
 }
+
+img.zoom100 {
+  max-width: 100% !important;
+}
