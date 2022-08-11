@@ -115,13 +115,20 @@ class UNotesPanel {
                         await UNotesPanel.recreate(this.extensionPath, this.currentNote)
                         break;
                     case 'convertImage':
-                        //console.log('mediaFolder[normalized]', path.normalize(this.getMediaFolderFullPath()));
-                        //console.log('message.path[dirname]', path.dirname(message.path));
-                        //console.log('message.path[dirname,normalized]', path.normalize(path.dirname(message.path)));
-                        if (path.normalize(this.getMediaFolderFullPath()).toLowerCase() === path.normalize(path.dirname(message.path)).toLowerCase()) {
+                        const imageFilePath = path.normalize(message.path).toLowerCase();
+                        const imageDirPath = path.dirname(imageFilePath).toLowerCase();
+                        let mediaFolderFullPath = path.normalize(this.getMediaFolderFullPath()).toLowerCase();
+                        if (!mediaFolderFullPath.startsWith(':',1)) { // for Windows Platform
+                            mediaFolderFullPath = "c:" + mediaFolderFullPath;
+                        }
+                        //console.log('imageFilePath', imageFilePath);
+                        //console.log('imageDirPath', imageDirPath);
+                        //console.log('mediaFolderFullPath', mediaFolderFullPath);
+                        if (imageDirPath.startsWith(mediaFolderFullPath)) {
+                            let pathInMediaFolder = imageFilePath.substring(mediaFolderFullPath.length);
                             this.imageToReplace = {
                                 base64: message.data,
-                                imagePath: Utils.getImageTagUrl(path.basename(message.path))
+                                imagePath: Utils.getImageTagUrl(pathInMediaFolder)
                             }
                         } 
                         else {
