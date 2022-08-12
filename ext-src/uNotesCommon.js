@@ -306,6 +306,13 @@ exports.Utils = {
             }
         }
         return false;
+    },
+
+    toLowerCaseDriveLetter(path){
+        if (/^[A-Z]:/.test(path)) {
+            return path[0].toLowerCase() + path.slice(1);
+        }
+        return path;
     }
 
 

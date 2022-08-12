@@ -115,9 +115,9 @@ class UNotesPanel {
                         await UNotesPanel.recreate(this.extensionPath, this.currentNote)
                         break;
                     case 'convertImage':
-                        const imageFilePath = path.normalize(message.path).toLowerCase();
-                        const imageDirPath = path.dirname(imageFilePath).toLowerCase();
-                        let mediaFolderFullPath = path.normalize(this.getMediaFolderFullPath()).toLowerCase();
+                        const imageFilePath = Utils.toLowerCaseDriveLetter(path.normalize(message.path));
+                        const imageDirPath = path.dirname(imageFilePath)
+                        let mediaFolderFullPath = Utils.toLowerCaseDriveLetter(path.normalize(this.getMediaFolderFullPath()));
                         if (!mediaFolderFullPath.startsWith(':',1)) { // for Windows Platform
                             mediaFolderFullPath = "c:" + mediaFolderFullPath;
                         }
@@ -130,7 +130,7 @@ class UNotesPanel {
                                 base64: message.data,
                                 imagePath: Utils.getImageTagUrl(pathInMediaFolder)
                             }
-                        } 
+                        }
                         else {
                             this.imageToConvert = message.data;
                         }
