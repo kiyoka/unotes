@@ -76,7 +76,6 @@ img.maxwidth100 {
 }
 
 .clipboard-icon {
-  color: black;
   font-size: 100px;
   position: absolute;
   top: 5%;
@@ -87,4 +86,13 @@ img.maxwidth100 {
   width: 48px;
   height: 48px;
   background-image: url('clipboard2-plus.48px.png');
+}
+
+body.vscode-light .clipboard-icon-color {
+  color: white;
+}
+
+body.vscode-dark .clipboard-icon-color {
+  color: white;
+  filter: invert(100%);
 }
