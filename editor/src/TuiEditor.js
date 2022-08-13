@@ -138,24 +138,32 @@ class TuiEditor extends Component {
                         case 25:
                         case 50:
                         case 75:
-                            result.attributes.class = "maxwidth" + percent;
+                            result.attributes.class = "maxwidth" + percent + " img-item";
                             break;
                         default:
-                            result.attributes.class = "maxwidth100";
+                            result.attributes.class = "maxwidth100 img-item";
                             break;
                     }
                     const httpRE = /^https?:\/\/|^data:/;
-                    if (httpRE.test(node.destination)){
-                        return result;
+                    if (httpRE.test(node.destination)) {
+                        // nothing to do
                     }
-                    if (entering) {
+                    else if (entering) {
                         if (node.destination.startsWith('/')) {
                             result.attributes.src = node.destination;
                         } else {
                             result.attributes.src = img_root + node.destination;
                         }
                     }
-                    return result;
+                    return [
+                        { type: 'openTag', tagName: 'div', classNames: ['img-container']},
+                        result,
+                        { type: 'openTag', tagName: 'div', classNames: ['overlay']},
+                        { type: 'openTag', tagName: 'div', classNames: ['clipboard-icon']},
+                        { type: 'closeTag', tagName: 'div'},
+                        { type: 'closeTag', tagName: 'div'},
+                        { type: 'closeTag', tagName: 'div'}
+                    ];
                 }
             }
             

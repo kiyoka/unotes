@@ -45,3 +45,46 @@ img.maxwidth75 {
 img.maxwidth100 {
   max-width: 100% !important;
 }
+
+.img-container {
+  position: relative;
+}
+
+.img-item {
+  display: block;
+  transition: 0.5s ease;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.5s ease;
+}
+
+.img-container:hover .overlay {
+  opacity: 1;
+}
+
+.img-container:hover .img-item {
+  opacity: 0.3;
+}
+
+.clipboard-icon {
+  color: black;
+  font-size: 100px;
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+  width: 48px;
+  height: 48px;
+  background-image: url('clipboard2-plus.48px.png');
+}
