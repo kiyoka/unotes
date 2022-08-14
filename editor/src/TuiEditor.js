@@ -144,8 +144,12 @@ class TuiEditor extends Component {
                             result.attributes.class = "maxwidth100 img-item";
                             break;
                     }
-                    const httpRE = /^https?:\/\/|^data:/;
-                    if (httpRE.test(node.destination)) {
+                    const dataRe = /^data:/;
+                    const httpRE = /^https?:\/\//;
+                    if (dataRe.test(node.destination)) {
+                        return result;
+                    }
+                    else if (httpRE.test(node.destination)) {
                         // nothing to do
                     }
                     else if (entering) {
@@ -194,8 +198,8 @@ class TuiEditor extends Component {
         if (str) {
           str = replaceAll(str, 'file://', '');
         }
-        str = replaceAll(str, '<span class="img-container">![', '![');
-        str = replaceAll(str, ')<span class="img-overlay"><span class="clipboard-icon clipboard-icon-color"></span></span></span>', ')');
+        str = str.replaceAll('<span class="img-container">', '');
+        str = str.replaceAll('<span class="img-overlay"><span class="clipboard-icon clipboard-icon-color"></span></span></span>', '');
         return str;
     }
 
