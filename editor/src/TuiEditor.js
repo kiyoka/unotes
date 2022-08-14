@@ -156,13 +156,13 @@ class TuiEditor extends Component {
                         }
                     }
                     return [
-                        { type: 'openTag', tagName: 'span', classNames: ['img-container']},
+                        { type: 'openTag', tagName: 'div', classNames: ['img-container'], outerNewLine: false, innerNewLine: false},
                         result,
-                        { type: 'openTag', tagName: 'span', classNames: ['overlay']},
-                        { type: 'openTag', tagName: 'span', classNames: ['clipboard-icon', 'clipboard-icon-color']},
-                        { type: 'closeTag', tagName: 'span'},
-                        { type: 'closeTag', tagName: 'span'},
-                        { type: 'closeTag', tagName: 'span'}
+                        { type: 'openTag', tagName: 'div', classNames: ['img-overlay'], outerNewLine: false, innerNewLine: false},
+                        { type: 'openTag', tagName: 'div', classNames: ['clipboard-icon', 'clipboard-icon-color'], outerNewLine: false, innerNewLine: false},
+                        { type: 'closeTag', tagName: 'div', outerNewLine: false, innerNewLine: false},
+                        { type: 'closeTag', tagName: 'div', outerNewLine: false, innerNewLine: false},
+                        { type: 'closeTag', tagName: 'div', outerNewLine: false, innerNewLine: false}
                     ];
                 }
             }

@@ -55,7 +55,7 @@ img.maxwidth100 {
   transition: 0.5s ease;
 }
 
-.overlay {
+.img-overlay {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -67,7 +67,7 @@ img.maxwidth100 {
   transition: 0.5s ease;
 }
 
-.img-container:hover .overlay {
+.img-container:hover .img-overlay {
   opacity: 1;
 }
 
@@ -76,13 +76,11 @@ img.maxwidth100 {
 }
 
 .clipboard-icon {
-  font-size: 100px;
   position: absolute;
   top: 5%;
   left: 5%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
-  text-align: center;
   width: 48px;
   height: 48px;
   background-image: url('clipboard2-plus.48px.png');
