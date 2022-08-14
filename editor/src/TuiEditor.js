@@ -160,13 +160,14 @@ class TuiEditor extends Component {
                         }
                     }
                     return [
-                        { type: 'openTag', tagName: 'span', classNames: ['img-container'] },
+                        { type: 'openTag', tagName: 'div', classNames: ['img-container'] },
                         result,
                         { type: 'openTag', tagName: 'span', classNames: ['img-overlay'] },
-                        { type: 'openTag', tagName: 'span', classNames: ['clipboard-icon', 'clipboard-icon-color'] },
+                        { type: 'openTag', tagName: 'span', classNames: ['url-text', 'url-text-color'] },
+                        { type: 'text', content: result.attributes.src },
                         { type: 'closeTag', tagName: 'span' },
                         { type: 'closeTag', tagName: 'span' },
-                        { type: 'closeTag', tagName: 'span' },
+                        { type: 'closeTag', tagName: 'div' },
                     ];
                 }
             }
@@ -198,8 +199,10 @@ class TuiEditor extends Component {
         if (str) {
           str = replaceAll(str, 'file://', '');
         }
+        console.log('1:' + str);
         str = str.replaceAll('<span class="img-container">', '');
-        str = str.replaceAll('<span class="img-overlay"><span class="clipboard-icon clipboard-icon-color"></span></span></span>', '');
+        str = str.replaceAll(/<span class="img-overlay"><span class="url-text url-text-color">([^<]*)<\/span><\/span><br>/g, '');
+        console.log('2:' + str);
         return str;
     }
 

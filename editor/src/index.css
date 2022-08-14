@@ -75,22 +75,15 @@ img.maxwidth100 {
   opacity: 0.3;
 }
 
-.clipboard-icon {
-  position: absolute;
-  top: 5%;
-  left: 5%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  width: 48px;
-  height: 48px;
-  background-image: url('clipboard2-plus.48px.png');
+.url-text {
+  text-align: left;
 }
 
-body.vscode-light .clipboard-icon-color {
-  color: white;
+body.vscode-light .url-text-color {
+  color: black;
 }
 
-body.vscode-dark .clipboard-icon-color {
+body.vscode-dark .url-text-color {
   color: white;
   filter: invert(100%);
 }
