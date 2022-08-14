@@ -156,13 +156,13 @@ class TuiEditor extends Component {
                         }
                     }
                     return [
-                        { type: 'openTag', tagName: 'div', classNames: ['img-container'], outerNewLine: false, innerNewLine: false},
+                        { type: 'openTag', tagName: 'span', classNames: ['img-container'] },
                         result,
-                        { type: 'openTag', tagName: 'div', classNames: ['img-overlay'], outerNewLine: false, innerNewLine: false},
-                        { type: 'openTag', tagName: 'div', classNames: ['clipboard-icon', 'clipboard-icon-color'], outerNewLine: false, innerNewLine: false},
-                        { type: 'closeTag', tagName: 'div', outerNewLine: false, innerNewLine: false},
-                        { type: 'closeTag', tagName: 'div', outerNewLine: false, innerNewLine: false},
-                        { type: 'closeTag', tagName: 'div', outerNewLine: false, innerNewLine: false}
+                        { type: 'openTag', tagName: 'span', classNames: ['img-overlay'] },
+                        { type: 'openTag', tagName: 'span', classNames: ['clipboard-icon', 'clipboard-icon-color'] },
+                        { type: 'closeTag', tagName: 'span' },
+                        { type: 'closeTag', tagName: 'span' },
+                        { type: 'closeTag', tagName: 'span' },
                     ];
                 }
             }
@@ -192,8 +192,10 @@ class TuiEditor extends Component {
     onHtmlBefore(e) {
         let str = replaceAll(e, img_root, '');
         if (str) {
-         str = replaceAll(str, 'file://', '');
+          str = replaceAll(str, 'file://', '');
         }
+        str = replaceAll(str, '<span class="img-container">![', '![');
+        str = replaceAll(str, ')<span class="img-overlay"><span class="clipboard-icon clipboard-icon-color"></span></span></span>', ')');
         return str;
     }
 
