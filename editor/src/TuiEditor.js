@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
-import Editor from '@toast-ui/editor/dist/toastui-editor';
+import Editor from '@toast-ui/editor';
 import chart from '@toast-ui/editor-plugin-code-syntax-highlight';
 import uml from '@toast-ui/editor-plugin-uml';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
-import hljs from 'highlight.js/lib/highlight'
+import hljs from 'highlight.js/lib/core'
 import '@toast-ui/editor/dist/toastui-editor.css';
-import 'codemirror/lib/codemirror.css';
+import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import 'highlight.js/styles/github.css';
 import './override-light.css';
 import './override-contents-light.css';
 import './override.css';
 import './override-contents.css';
-import './override-codemirror.css';
-import './override-codemirror-light.css';
 import './override-hljs.css';
 import remark from 'remark';
 import gfm from 'remark-gfm';
@@ -68,8 +66,8 @@ class TuiEditor extends Component {
     constructor(props) {
         super(props);
         this.el = React.createRef();
-        this.onHtmlBefore = this.onHtmlBefore.bind(this);
-        this.onAfterMarkdown = this.onAfterMarkdown.bind(this);
+        this.onBeforePreviewRender = this.onBeforePreviewRender.bind(this);
+        this.onBeforeConvertWysiwygToMarkdown = this.onBeforeConvertWysiwygToMarkdown.bind(this);
         this.onPreviewBeforeHook = this.onPreviewBeforeHook.bind(this);
         this.handleMessage = this.handleMessage.bind(this);
         this.remarkSettings = null;
@@ -99,28 +97,12 @@ class TuiEditor extends Component {
             },
             usageStatistics: false,
             useCommandShortcut: false,
-            plugins: [chart, uml, [codeSyntaxHighlight, { hljs }], katexPlugin],
             toolbarItems: [
-                'heading',
-                'bold',
-                'italic',
-                'strike',
-                'divider',
-                'hr',
-                'quote',
-                'divider',
-                'ul',
-                'ol',
-                'task',
-                'indent',
-                'outdent',
-                'divider',
-                'table',
-                'image',
-                'link',
-                'divider',
-                'code',
-                'codeblock'
+                ['heading', 'bold', 'italic', 'strike'],
+                ['hr', 'quote'],
+                ['ul', 'ol', 'task', 'indent', 'outdent'],
+                ['table', 'image', 'link'],
+                ['code', 'codeblock']
             ],
             customHTMLRenderer: {
                 // For local images to work
@@ -159,14 +141,12 @@ class TuiEditor extends Component {
                 }
             }
             
-        });
+          });
 
-        editor.on("convertorBeforeHtmlToMarkdownConverted", this.onHtmlBefore);
+        editor.on("beforePreviewRender", this.onBeforePreviewRender);
 
-        editor.on("convertorAfterHtmlToMarkdownConverted", this.onAfterMarkdown)
-
-        editor.on("previewBeforeHook", this.onPreviewBeforeHook);
-
+        editor.on("beforeConvertWysiwygToMarkdown", this.onBeforeConvertWysiwygToMarkdown);
+  
         editor.on("addImageBlobHook", this.onPaste.bind(this));
 
         editor.addHook("scroll", this.onScroll.bind(this));
@@ -181,7 +161,8 @@ class TuiEditor extends Component {
         });
     }
 
-    onHtmlBefore(e) {
+    onBeforePreviewRender(e) {
+        console.log('onBeforePreviewRender', e);
         let str = replaceAll(e, img_root, '');
         if (str) {
          str = replaceAll(str, 'file://', '');
@@ -189,7 +170,8 @@ class TuiEditor extends Component {
         return str;
     }
 
-    onAfterMarkdown(e) {
+    onBeforeConvertWysiwygToMarkdown(e) {
+        console.log('onBeforeConvertWysiwygToMarkdown', e);
         if(this.remarkSettings){
             // Reformat markdown
             // console.log("from...")
@@ -211,21 +193,16 @@ class TuiEditor extends Component {
         return e;
     }
 
-    onPreviewBeforeHook(e) {
-        //console.log(e);
-        return e;
-    }
-
     onScroll(e) {
         if(!this.contentPath)
             return;
 
         // save the scroll positions
         if(this.state.editor.isWysiwygMode() && e.data){
-            this.wysiwygScroll[this.contentPath] = this.state.editor.getCurrentModeEditor().scrollTop(); 
+            this.wysiwygScroll[this.contentPath] = this.state.editor.getCurrentModeEditor().getScrollTop(); 
         
         } else {
-            this.markdownScroll[this.contentPath] = this.state.editor.getCurrentModeEditor().scrollTop(); 
+            this.markdownScroll[this.contentPath] = this.state.editor.getCurrentModeEditor().getScrollTop(); 
         }
     }
 
@@ -270,7 +247,7 @@ class TuiEditor extends Component {
             if(!sTop){
                 sTop = 0;    
             } 
-            this.state.editor.scrollTop(sTop);
+            this.state.editor.setScrollTop(sTop);
         } 
     }
 
