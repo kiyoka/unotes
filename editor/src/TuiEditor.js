@@ -66,7 +66,6 @@ class TuiEditor extends Component {
     constructor(props) {
         super(props);
         this.el = React.createRef();
-        this.onBeforePreviewRender = this.onBeforePreviewRender.bind(this);
         this.onBeforeConvertWysiwygToMarkdown = this.onBeforeConvertWysiwygToMarkdown.bind(this);
         this.handleMessage = this.handleMessage.bind(this);
         this.remarkSettings = null;
@@ -106,8 +105,9 @@ class TuiEditor extends Component {
             customHTMLRenderer: {
                 // For local images to work
                 image(node, context) {
-                    const { origin, entering } = context;
+                    const { origin, entering, skipChildren } = context;
                     const result = origin();
+                    skipChildren();
                     // console.log("Config__img_max_width_percent" + Config__img_max_width_percent);
                     // console.log("Temp__img_max_width_percent" + Temp__img_max_width_percent);
                     let percent = Config__img_max_width_percent;
@@ -142,8 +142,6 @@ class TuiEditor extends Component {
             
           });
 
-        editor.on("beforePreviewRender", this.onBeforePreviewRender);
-
         editor.on("beforeConvertWysiwygToMarkdown", this.onBeforeConvertWysiwygToMarkdown);
   
         editor.on("addImageBlobHook", this.onPaste.bind(this));
@@ -160,13 +158,6 @@ class TuiEditor extends Component {
         });
     }
 
-    onBeforePreviewRender(e) {
-        let str = replaceAll(e, img_root, '');
-        if (str) {
-         str = replaceAll(str, 'file://', '');
-        }
-        return str;
-    }
 
     onBeforeConvertWysiwygToMarkdown(e) {
         if(this.remarkSettings){
