@@ -68,7 +68,6 @@ class TuiEditor extends Component {
         this.el = React.createRef();
         this.onBeforePreviewRender = this.onBeforePreviewRender.bind(this);
         this.onBeforeConvertWysiwygToMarkdown = this.onBeforeConvertWysiwygToMarkdown.bind(this);
-        this.onPreviewBeforeHook = this.onPreviewBeforeHook.bind(this);
         this.handleMessage = this.handleMessage.bind(this);
         this.remarkSettings = null;
         this.contentSet = false;
@@ -120,10 +119,10 @@ class TuiEditor extends Component {
                         case 25:
                         case 50:
                         case 75:
-                            result.attributes.class = "maxwidth" + percent;
+                            result.classNames = ["maxwidth" + percent];
                             break;
                         default:
-                            result.attributes.class = "maxwidth100";
+                            result.classNames = ["maxwidth100"];
                             break;
                     }
                     const httpRE = /^https?:\/\/|^data:/;
@@ -162,7 +161,6 @@ class TuiEditor extends Component {
     }
 
     onBeforePreviewRender(e) {
-        console.log('onBeforePreviewRender', e);
         let str = replaceAll(e, img_root, '');
         if (str) {
          str = replaceAll(str, 'file://', '');
@@ -171,7 +169,6 @@ class TuiEditor extends Component {
     }
 
     onBeforeConvertWysiwygToMarkdown(e) {
-        console.log('onBeforeConvertWysiwygToMarkdown', e);
         if(this.remarkSettings){
             // Reformat markdown
             // console.log("from...")
