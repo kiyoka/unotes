@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Editor from '@toast-ui/editor';
-import chart from '@toast-ui/editor-plugin-code-syntax-highlight';
+import chart from '@toast-ui/editor-plugin-chart';
 import uml from '@toast-ui/editor-plugin-uml';
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
-import hljs from 'highlight.js/lib/core'
+import 'prismjs/themes/prism.css';
+import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import 'highlight.js/styles/github.css';
@@ -95,6 +96,7 @@ class TuiEditor extends Component {
             },
             usageStatistics: false,
             useCommandShortcut: false,
+            plugins: [chart, uml, codeSyntaxHighlight],
             toolbarItems: [
                 ['heading', 'bold', 'italic', 'strike'],
                 ['hr', 'quote'],
