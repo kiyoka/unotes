@@ -102,7 +102,8 @@ class TuiEditor extends Component {
                 ['hr', 'quote'],
                 ['ul', 'ol', 'task', 'indent', 'outdent'],
                 ['table', 'image', 'link'],
-                ['code', 'codeblock']
+                ['code', 'codeblock'],
+                ['scrollSync']
             ],
             customHTMLRenderer: {
                 // For local images to work
@@ -148,7 +149,7 @@ class TuiEditor extends Component {
   
         editor.on("addImageBlobHook", this.onPaste.bind(this));
 
-        editor.addHook("scroll", this.onScroll.bind(this));
+        editor.on("caretChange", this.onCaretChange.bind(this));
 
         window.addEventListener('message', this.handleMessage);
 
@@ -183,7 +184,7 @@ class TuiEditor extends Component {
         return e;
     }
 
-    onScroll(e) {
+    onCaretChange(e) {
         if(!this.contentPath)
             return;
 
