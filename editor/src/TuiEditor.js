@@ -83,7 +83,10 @@ class TuiEditor extends Component {
     }
 
     componentDidMount() {
-
+        let theme = 'light';
+        if (0 < document.documentElement.getElementsByClassName("vscode-dark").length) {
+            theme = 'dark';
+        }
         let editor = new Editor({
             el: this.el.current,
             initialEditType: 'wysiwyg',
@@ -91,6 +94,7 @@ class TuiEditor extends Component {
             frontMatter: true,
             minHeight: '100vh',
             height: '100vh',
+            theme: theme,
             events: {
                 change: debounce(this.onChange.bind(this), 400)
             },
