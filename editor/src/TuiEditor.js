@@ -189,15 +189,17 @@ class TuiEditor extends Component {
     }
 
     onCaretChange(e) {
+        //console.log('onCaretChange', e);
         if(!this.contentPath)
             return;
 
         // save the scroll positions
-        if(this.state.editor.isWysiwygMode() && e.data){
-            this.wysiwygScroll[this.contentPath] = this.state.editor.getCurrentModeEditor().getScrollTop(); 
-        
+        if(this.state.editor.isWysiwygMode() && e){
+            this.wysiwygScroll[this.contentPath] = this.state.editor.getCurrentModeEditor().getScrollTop();
+            //console.log('onCaretChange:wysiwyg.scroll',this.contentPath,this.wysiwygScroll[this.contentPath]);
         } else {
             this.markdownScroll[this.contentPath] = this.state.editor.getCurrentModeEditor().getScrollTop(); 
+            //console.log('onCaretChange:markdown.scroll',this.contentPath,this.markdownScroll[this.contentPath]);
         }
     }
 
@@ -228,13 +230,18 @@ class TuiEditor extends Component {
         window.removeEventListener('message', this.handleMessage.bind(this));
     }
 
-    setContent(data){
+    setContent(data, fileHash, editHash){
+        //console.log('this.contentPath', this.contentPath);
+        //console.log('data.contentPath', data.contentPath);
         img_root = data.folderPath + '/';
         Config__img_max_width_percent = data.percent;
-        this.state.editor.setMarkdown(data.content, false);
-        this.contentSet = true;
-        
         const isSamePath = (this.contentPath === data.contentPath);
+        //console.log('isSamePath', isSamePath);
+        if ((!isSamePath) ||
+            (fileHash !== editHash)) {
+            this.state.editor.setMarkdown(data.content, false);
+            this.contentSet = true;
+        }
         this.contentPath = data.contentPath;
         if (!isSamePath){
             const scrolls = this.state.editor.isWysiwygMode() ? this.wysiwygScroll : this.markdownScroll;
@@ -242,14 +249,15 @@ class TuiEditor extends Component {
             if(!sTop){
                 sTop = 0;    
             } 
+            //console.log('sTop', this.contentPath, sTop);
             this.state.editor.setScrollTop(sTop);
-        } 
+        }
     }
 
     handleMessage(e) {
         switch (e.data.command) {
             case 'setContent':
-                this.setContent(e.data);
+                this.setContent(e.data, e.fileHash, e.editHash);
                 break;
             case 'exec':
                 this.state.editor.exec(...e.data.args);

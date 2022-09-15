@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 const vscode = require('vscode');
 const path = require('path');
+const crypto = require('crypto');
 const os = require("os");
 const { Config, Utils } = require("./uNotesCommon");
 
@@ -56,6 +57,7 @@ class UNotesPanel {
             this.reloadContentNeeded = false;
             this.updateSettingsNeeded = false;
             this.currentPath = '';
+            this.currentContent = {};
             this.currentNote = null;
             this.imageToConvert = null;
             this.imageToReplace = null;
@@ -291,6 +293,7 @@ class UNotesPanel {
         
         if (this.currentPath) {
             this.writingFile = this.currentPath;
+            this.currentContent[ this.currentPath ] = content;
             const encoder = new TextEncoder();
             await vscode.workspace.fs.writeFile(vscode.Uri.file(this.currentPath), encoder.encode(content));
         }
@@ -310,13 +313,27 @@ class UNotesPanel {
         }
     }
 
+    calcHash(content) {
+        const shasum = crypto.createHash('sha1');
+        shasum.update(content);
+        let hash = shasum.digest('hex');
+        return hash;
+    }
+
     async updateContents() {
         try {
             if(this.currentNote){
                 const decoder = new TextDecoder();
                 const content = decoder.decode(await vscode.workspace.fs.readFile(vscode.Uri.file(this.currentPath)));
+                let fileHash = this.calcHash(content);
+                let editHash = '';
+                if(this.currentContent[ this.currentPath ]) {
+                    editHash = this.calcHash(this.currentContent[ this.currentPath ]);
+                }
+                //console.log('fileHash', fileHash);
+                //console.log('editHash', editHash);
                 const folderPath = this.panel.webview.asWebviewUri(vscode.Uri.file(path.join(Config.rootPath, this.currentNote.folderPath))).path;
-                this.panel.webview.postMessage({ command: 'setContent', content, folderPath, contentPath: this.currentPath, percent: Config.imageMaxWidthPercent })
+                this.panel.webview.postMessage({ command: 'setContent', content, fileHash, editHash, folderPath, contentPath: this.currentPath, percent: Config.imageMaxWidthPercent })
             }
         }
         catch (e) {
