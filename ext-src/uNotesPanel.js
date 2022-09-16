@@ -57,7 +57,7 @@ class UNotesPanel {
             this.reloadContentNeeded = false;
             this.updateSettingsNeeded = false;
             this.currentPath = '';
-            this.currentContent = {};
+            this.savedContent = {};
             this.currentNote = null;
             this.imageToConvert = null;
             this.imageToReplace = null;
@@ -102,15 +102,15 @@ class UNotesPanel {
                         await this.saveChanges(message.content);
                         if (this.imageToReplace){
                             this.imageToReplace = null;
-                            await this.updateContents();
+                            await this.updateContents(true);
                         }
                         else if (this.imageToConvert){
                             this.imageToConvert = null;  
-                            await this.updateContents();
+                            await this.updateContents(true);
                         }
                         break;
                     case 'editorOpened':
-                        await this.updateContents();
+                        await this.updateContents(true);
                         this.updateEditorSettings();
                         await this.updateRemarkSettings();
                         break;
@@ -147,7 +147,7 @@ class UNotesPanel {
             this.panel.onDidChangeViewState(async e => {
                 if (e.webviewPanel.active) {
                     if (this.reloadContentNeeded) {
-                        await this.updateContents();
+                        await this.updateContents(true);
                         this.reloadContentNeeded = false;
                     }
                     if (this.updateSettingsNeeded) {
@@ -282,7 +282,7 @@ class UNotesPanel {
         if (this.panel.active) {
             this.panel.webview.postMessage({ command: 'imageMaxWidth', percent});
         }
-        await this.updateContents();
+        await this.updateContents(true);
     }
 
     insertTemplate() {
@@ -293,7 +293,7 @@ class UNotesPanel {
         
         if (this.currentPath) {
             this.writingFile = this.currentPath;
-            this.currentContent[ this.currentPath ] = content;
+            this.savedContent[ this.currentPath ] = content;
             const encoder = new TextEncoder();
             await vscode.workspace.fs.writeFile(vscode.Uri.file(this.currentPath), encoder.encode(content));
         }
@@ -304,7 +304,7 @@ class UNotesPanel {
             const filePath = unote.fullPath();
             this.currentNote = unote;
             this.currentPath = filePath;
-            await this.updateContents();
+            await this.updateContents(true);
             const title = unote.label;
             this.panel.title = 'Unotes - ' + title;
         }
@@ -320,20 +320,24 @@ class UNotesPanel {
         return hash;
     }
 
-    async updateContents() {
+    async updateContents(force) {
         try {
             if(this.currentNote){
                 const decoder = new TextDecoder();
                 const content = decoder.decode(await vscode.workspace.fs.readFile(vscode.Uri.file(this.currentPath)));
                 let fileHash = this.calcHash(content);
-                let editHash = '';
-                if(this.currentContent[ this.currentPath ]) {
-                    editHash = this.calcHash(this.currentContent[ this.currentPath ]);
+                let savedHash = '';
+                if(this.savedContent[ this.currentPath ]) {
+                    savedHash = this.calcHash(this.savedContent[ this.currentPath ]);
                 }
                 //console.log('fileHash', fileHash);
-                //console.log('editHash', editHash);
+                //console.log('saveHash', savedHash);
+                //console.log('force',force);
+                if(force) {
+                    savedHash = '';
+                }
                 const folderPath = this.panel.webview.asWebviewUri(vscode.Uri.file(path.join(Config.rootPath, this.currentNote.folderPath))).path;
-                this.panel.webview.postMessage({ command: 'setContent', content, fileHash, editHash, folderPath, contentPath: this.currentPath, percent: Config.imageMaxWidthPercent })
+                this.panel.webview.postMessage({ command: 'setContent', content, fileHash, savedHash, folderPath, contentPath: this.currentPath, percent: Config.imageMaxWidthPercent })
             }
         }
         catch (e) {
@@ -425,7 +429,7 @@ class UNotesPanel {
         if ((this.currentPath == filePath) && (filePath != this.writingFile)) {
             // if the view is active then load now else flag to reload on showing
             if (this.panel.active) {
-                await this.updateContents();
+                await this.updateContents(false);
             } else {
                 this.reloadContentNeeded = true;
             }

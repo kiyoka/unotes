@@ -230,15 +230,17 @@ class TuiEditor extends Component {
         window.removeEventListener('message', this.handleMessage.bind(this));
     }
 
-    setContent(data, fileHash, editHash){
+    setContent(data, fileHash, savedHash){
         //console.log('this.contentPath', this.contentPath);
         //console.log('data.contentPath', data.contentPath);
+        //console.log('fileHash', fileHash);
+        //console.log('savedHash', savedHash);
         img_root = data.folderPath + '/';
         Config__img_max_width_percent = data.percent;
         const isSamePath = (this.contentPath === data.contentPath);
         //console.log('isSamePath', isSamePath);
         if ((!isSamePath) ||
-            (fileHash !== editHash)) {
+            (fileHash !== savedHash)) {
             this.state.editor.setMarkdown(data.content, false);
             this.contentSet = true;
         }
@@ -257,7 +259,7 @@ class TuiEditor extends Component {
     handleMessage(e) {
         switch (e.data.command) {
             case 'setContent':
-                this.setContent(e.data, e.fileHash, e.editHash);
+                this.setContent(e.data, e.data.fileHash, e.data.savedHash);
                 break;
             case 'exec':
                 this.state.editor.exec(...e.data.args);
