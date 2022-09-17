@@ -159,61 +159,61 @@ class UNotesPanel {
 
             // Register commands
             this.disposables.push(vscode.commands.registerCommand("unotes.heading.1", () => {
-                this.hotkeyExec(['Heading', 1]);
+                this.hotkeyExec(['heading', {level: 1}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.heading.2", () => {
-                this.hotkeyExec(['Heading', 2]);
+                this.hotkeyExec(['heading', {level: 2}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.heading.3", () => {
-                this.hotkeyExec(['Heading', 3]);
+                this.hotkeyExec(['heading', {level: 3}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.heading.4", () => {
-                this.hotkeyExec(['Heading', 4]);
+                this.hotkeyExec(['heading', {level: 4}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.heading.5", () => {
-                this.hotkeyExec(['Heading', 5]);
+                this.hotkeyExec(['heading', {level: 5}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.heading.6", () => {
-                this.hotkeyExec(['Heading', 6]);
+                this.hotkeyExec(['heading', {level: 6}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.normal", () => {
-                this.hotkeyExec(['Paragraph']);
+                this.hotkeyExec(['heading', {level: 0}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.bold", () => {
-                this.hotkeyExec(['Bold']);
+                this.hotkeyExec(['bold', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.italic", () => {
-                this.hotkeyExec(['Italic']);
+                this.hotkeyExec(['italic', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.strike", () => {
-                this.hotkeyExec(['Strike']);
+                this.hotkeyExec(['strike', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.task", () => {
-                this.hotkeyExec(['Task']);
+                this.hotkeyExec(['taskList', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.ul", () => {
-                this.hotkeyExec(['UL']);
+                this.hotkeyExec(['bulletList', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.ol", () => {
-                this.hotkeyExec(['OL']);
+                this.hotkeyExec(['orderedList', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.blockquote", () => {
-                this.hotkeyExec(['Blockquote']);
+                this.hotkeyExec(['blockQuote', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.code", () => {
-                this.hotkeyExec(['Code']);
+                this.hotkeyExec(['code', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.codeblock", () => {
-                this.hotkeyExec(['CodeBlock']);
+                this.hotkeyExec(['codeBlock', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.indent", () => {
-                this.hotkeyExec(['Indent']);
+                this.hotkeyExec(['indent', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.outdent", () => {
-                this.hotkeyExec(['Outdent']);
+                this.hotkeyExec(['outdent', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.hr", () => {
-                this.hotkeyExec(['HR']);
+                this.hotkeyExec(['hr', {}]);
             }));
             this.disposables.push(vscode.commands.registerCommand("unotes.toggleMode", () => {
                 this.toggleEditorMode();
