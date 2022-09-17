@@ -274,9 +274,9 @@ class TuiEditor extends Component {
                 break;
             case 'toggleMode':
                 if(!this.state.editor.isWysiwygMode()){
-                    this.state.editor.getUI().getModeSwitch()._changeWysiwyg();
+                    this.state.editor.changeMode('wysiwyg');
                 } else {
-                    this.state.editor.getUI().getModeSwitch()._changeMarkdown();
+                    this.state.editor.changeMode('markdown');
                 }
                 break;
             case 'imageMaxWidth':
