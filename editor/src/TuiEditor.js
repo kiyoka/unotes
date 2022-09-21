@@ -37,10 +37,10 @@ function replaceAll(str, find, replace) {
     return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
 
-/**
+ /**
  * KATEX code block replacer
  */
-function katexReplacer(code) {
+ function katexReplacer(code) {
     let newHTML;
 
     try {
@@ -56,11 +56,33 @@ function katexReplacer(code) {
     return newHTML;
 }
 
-function katexPlugin() {
-    Editor.codeBlockManager.setReplacer('katex', katexReplacer);
+function getHTMLRenderers() {
+    return {
+        codeBlock(node) {
+            const { fenceLength, info } = node;
+            const infoWords = info ? info.split(/\s+/) : [];
+            let content = node.literal;
+            console.log('info',info);
+            if (infoWords.length && infoWords[0].length) {
+                const lang = infoWords[0];
+                if (lang === 'katex') {
+                    content = katexReplacer(node.literal);
+                }
+            }
+            return [
+                { type: 'openTag', tagName: 'code' },
+                { type: 'html', content },
+                { type: 'closeTag', tagName: 'code' }
+            ];
+        }
+    }
 }
 
-
+function katexPlugin(context, options) {
+    return {
+        toHTMLRenderers: getHTMLRenderers(context)
+    }
+}
 
 class TuiEditor extends Component {
 
@@ -100,7 +122,7 @@ class TuiEditor extends Component {
             },
             usageStatistics: false,
             useCommandShortcut: false,
-            plugins: [chart, uml, codeSyntaxHighlight],
+            plugins: [chart, uml, codeSyntaxHighlight, katexPlugin],
             toolbarItems: [
                 ['heading', 'bold', 'italic', 'strike'],
                 ['hr', 'quote'],
