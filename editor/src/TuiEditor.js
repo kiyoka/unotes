@@ -74,6 +74,14 @@ function getHTMLRenderers() {
                 { type: 'html', content },
                 { type: 'closeTag', tagName: 'code' }
             ];
+        },
+        katex(node) {
+            const content = katexReplacer(node.literal);
+            return [
+                { type: 'openTag', tagName: 'code' },
+                { type: 'html', content },
+                { type: 'closeTag', tagName: 'code' }
+            ]
         }
     }
 }
