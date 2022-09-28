@@ -70,9 +70,11 @@ function getHTMLRenderers() {
                 }
             }
             return [
+                { type: 'openTag', tagName: 'pre'},
                 { type: 'openTag', tagName: 'code' },
                 { type: 'html', content },
-                { type: 'closeTag', tagName: 'code' }
+                { type: 'closeTag', tagName: 'code' },
+                { type: 'closeTag', tagName: 'pre' }
             ];
         },
         katex(node) {
@@ -130,7 +132,7 @@ class TuiEditor extends Component {
             },
             usageStatistics: false,
             useCommandShortcut: false,
-            plugins: [chart, uml, codeSyntaxHighlight, katexPlugin],
+            plugins: [chart, uml, katexPlugin, codeSyntaxHighlight],
             toolbarItems: [
                 ['heading', 'bold', 'italic', 'strike'],
                 ['hr', 'quote'],
