@@ -154,7 +154,6 @@ class TuiEditor extends Component {
 
         editor.on("beforeConvertWysiwygToMarkdown", this.onBeforeConvertWysiwygToMarkdown);
   
-        editor.on("addImageBlobHook", this.onPaste.bind(this));
 
         editor.on("caretChange", this.onCaretChange.bind(this));
 
@@ -219,28 +218,6 @@ class TuiEditor extends Component {
         }
     }
 
-    onPaste(e) {
-        const toBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-
-        if(!this.state.settings.convertPastedImages){
-            return;
-        }
-
-        return toBase64(e)
-        .then(result => {
-            window.vscode.postMessage({
-                command: 'convertImage',
-                path: e.path,
-                data: result
-            });
-            return null;
-        });
-    }
 
     componentWillUnmount() {
         window.removeEventListener('message', this.handleMessage.bind(this));
