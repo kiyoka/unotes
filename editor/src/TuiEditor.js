@@ -80,7 +80,9 @@ class TuiEditor extends Component {
         this.state = {
             settings: {
                 display2X: false,
-                extraFocus: false
+                convertPastedImages: false,
+                extraFocus: false,
+                imageMaxWidthPercent: 100
             }
         }
     }
@@ -313,10 +315,21 @@ class TuiEditor extends Component {
             case 'exec':
                 this.state.editor.exec(...e.data.args);
                 break;
-            case 'settings':
-                this.setState({ settings: e.data.settings });
-                Config__img_max_width_percent = e.data.settings.imageMaxWidthPercent;
+            case 'settings': {
+                // merge defaults with incoming settings
+                const merged = Object.assign(
+                    {
+                        display2X: false,
+                        convertPastedImages: false,
+                        extraFocus: false,
+                        imageMaxWidthPercent: 100
+                    },
+                    e.data.settings
+                );
+                this.setState({ settings: merged });
+                Config__img_max_width_percent = merged.imageMaxWidthPercent;
                 break;
+            }
             case 'remarkSettings':
                 this.remarkSettings = e.data.settings;
                 this.remarkPlugin = unotesRemarkPlugin(this.remarkSettings);
