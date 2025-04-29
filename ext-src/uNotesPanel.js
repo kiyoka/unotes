@@ -46,6 +46,32 @@ class UNotesPanel {
         }
     }
 
+    /**
+     * Scans content for embedded base64 images, saves them to media folder, and replaces with file paths
+     * @param content the markdown content
+     * @returns new content with image paths
+     */
+    async convertAllImages(content) {
+        if (!this.currentNote) {
+            return content;
+        }
+        const noteFolder = this.getNoteFolderFullPath();
+        let index = await Utils.getNextImageIndex(noteFolder);
+        const imgBuffers = [];
+        // match base64 images
+        const newContent = content.replace(/data:image\/(.*?);base64,([A-Za-z0-9+/=]+)/g, (match, imgType, data) => {
+            const fname = Utils.getImageName(index, imgType);
+            imgBuffers.push({ buffer: Buffer.from(data, 'base64'), index: index, type: imgType });
+            index++;
+            return Utils.getImageTagUrl(fname);
+        });
+        // save all images
+        for (const img of imgBuffers) {
+            await Utils.saveMediaImage(noteFolder, img.buffer, img.index, img.type);
+        }
+        return newContent;
+    }
+
     static instance() {
         return _currentPanel;
     }
@@ -85,32 +111,46 @@ class UNotesPanel {
             // Handle messages from the webview
             this.panel.webview.onDidReceiveMessage(async message => {
                 switch (message.command) {
-                    case 'applyChanges':
+                    case 'applyChanges': {
                         if (message.contentPath != this.currentPath) break;
-
-                        // kind of a hack to replace pasted images with actual files
-                        if (this.imageToReplace){
-                            const newContent = await this.replaceImage(message.content, this.imageToReplace);
-                            if(newContent){     // will be empty on error
-                                message.content = newContent;
+                        let content = message.content;
+                        // if a specific image replace/convert was requested
+                        if (this.imageToReplace) {
+                            const newContent = await this.replaceImage(content, this.imageToReplace);
+                            if (newContent) {
+                                content = newContent;
+                            }
+                        } else if (this.imageToConvert) {
+                            const newContent = await this.convertImage(content, this.imageToConvert);
+                            if (newContent) {
+                                content = newContent;
+                            }
+                        } else {
+                            // fallback: convert any embedded base64 images if setting enabled
+                            const edSettings = Config.settings.get('editor') || Config.settings.editor || {};
+                            if (edSettings.convertPastedImages) {
+                                const newContent = await this.convertAllImages(content);
+                                if (newContent && newContent !== content) {
+                                    content = newContent;
+                                    // after fallback conversion, force reload
+                                    await this.saveChanges(content);
+                                    await this.updateContents(true);
+                                    break;
+                                }
                             }
                         }
-                        else if (this.imageToConvert){
-                            const newContent = await this.convertImage(message.content, this.imageToConvert);
-                            if(newContent){     // will be empty on error
-                                message.content = newContent;
-                            }
-                        }
-                        await this.saveChanges(message.content);
-                        if (this.imageToReplace){
+                        // save changes
+                        await this.saveChanges(content);
+                        // reset flags and reload if needed
+                        if (this.imageToReplace) {
                             this.imageToReplace = null;
                             await this.updateContents(true);
-                        }
-                        else if (this.imageToConvert){
-                            this.imageToConvert = null;  
+                        } else if (this.imageToConvert) {
+                            this.imageToConvert = null;
                             await this.updateContents(true);
                         }
                         break;
+                    }
                     case 'editorOpened':
                         await this.updateContents(true);
                         this.updateEditorSettings();
