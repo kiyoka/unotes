@@ -7,7 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 const vscode = require('vscode');
 const path = require('path');
 const crypto = require('crypto');
-const os = require("os");
 const { Config, Utils } = require("./uNotesCommon");
 
 let _currentPanel = null;
@@ -392,14 +391,6 @@ class UNotesPanel {
     getNoteFolderFullPath() {
         const noteFolderFullPath = path.join(Config.rootPath, this.currentNote.folderPath);
         return noteFolderFullPath
-    }
-
-    getMediaFolderFullPath() {
-        if (Config.mediaFolder.startsWith('/')) {
-            return Config.mediaFolder;
-        }
-        const noteFolderFullPath = this.getNoteFolderFullPath();
-        return path.join(noteFolderFullPath, Config.mediaFolder);
     }
 
     /**

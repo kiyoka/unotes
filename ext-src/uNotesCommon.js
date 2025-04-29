@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 const path = require("path");
 const vscode = require("vscode");
+const os = require("os");
 const Handlebars = require("express-handlebars");
 const moment = require("moment")
 const extId = 'unotes';
@@ -175,11 +176,17 @@ exports.Utils = {
      */
     async getNextImageIndex(folderPath) {
         let index = 0;
-        let mediaPath = path.join(folderPath, Config.mediaFolder);
+        let mediaPath;
         if (path.isAbsolute(Config.mediaFolder)) {
             mediaPath = Config.mediaFolder;
+            // On Windows, prefix drive letter if missing
+            if (os.platform() === 'win32' && mediaPath.startsWith('/')) {
+                mediaPath = 'c:' + mediaPath;
+            }
+        } else {
+            mediaPath = path.join(folderPath, Config.mediaFolder);
         }
-        if(!await this.fileExists(mediaPath)){
+        if (!await this.fileExists(mediaPath)) {
             return 0;
         }
         const entries = await vscode.workspace.fs.readDirectory(vscode.Uri.file(mediaPath));
@@ -208,9 +215,15 @@ exports.Utils = {
      */
     async saveMediaImage(folderPath, imgBuffer, index, imgType) {
         let newIndex = index;
-        let mediaPath = path.join(folderPath, Config.mediaFolder);
+        let mediaPath;
         if (path.isAbsolute(Config.mediaFolder)) {
             mediaPath = Config.mediaFolder;
+            // On Windows, prefix drive letter if missing (e.g., "/images" -> "c:/images")
+            if (os.platform() === 'win32' && mediaPath.startsWith('/')) {
+                mediaPath = 'c:' + mediaPath;
+            }
+        } else {
+            mediaPath = path.join(folderPath, Config.mediaFolder);
         }
 
         // create the folder if needed
